@@ -13,7 +13,10 @@ export class QuestionService {
   ) {}
 
   async createQuestion(dto: CreateQuestionDto) {
-    const question = this.questionRepo.create({ ...dto });
+    const question = this.questionRepo.create({
+      ...dto,
+      topic: { id: dto.topicId },
+    });
 
     await this.questionRepo.save(question);
 

@@ -5,6 +5,7 @@ import { CustomPassportModule } from './passport/passport.module';
 import { AuthModule } from './auth/auth.module';
 import { TopicModule } from './topic/topic.module';
 import { QuestionModule } from './question/question.module';
+import { GeminiModule } from './gemini/gemini.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { QuestionModule } from './question/question.module';
     AuthModule,
     TopicModule,
     QuestionModule,
+    GeminiModule,
   ],
   controllers: [],
   providers: [],
