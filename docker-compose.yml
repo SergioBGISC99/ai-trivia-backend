@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    container_name: mentify-postgres
+    image: postgres:16.3    
+    restart: no
+    ports:
+      - "5432:${DB_PORT}"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
