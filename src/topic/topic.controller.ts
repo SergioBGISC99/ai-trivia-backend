@@ -20,8 +20,6 @@ export class TopicController {
 
   @Get(':term')
   findOne(@Param('term') term: string) {
-    console.log(term);
-
     return this.topicService.findTopic(term);
   }
 }

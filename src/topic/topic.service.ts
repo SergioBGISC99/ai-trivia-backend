@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Topic } from '../entities/topic.entity';
 import { Repository } from 'typeorm';
@@ -12,27 +12,31 @@ export class TopicService {
   ) {}
 
   async createTopic(dto: CreateTopicDto) {
-    const newTopic = this.topicRepo.create(dto);
+    const { description } = dto;
+
+    const normalizedDescription = description.toUpperCase();
+
+    const newTopic = this.topicRepo.create({
+      description: normalizedDescription,
+    });
     await this.topicRepo.save(newTopic);
 
     return { topic: newTopic };
   }
 
   async findTopic(term: string) {
-    let topic: Topic;
+    let topic: Topic | null;
 
     if (isUUID(term)) {
-      topic = await this.topicRepo.findOneByOrFail({ id: term });
+      topic = await this.topicRepo.findOneBy({ id: term });
     } else {
       const queryBuilder = this.topicRepo.createQueryBuilder('topic');
       topic = await queryBuilder
         .where('UPPER(description) =:description', {
           description: term.toUpperCase(),
         })
-        .getOneOrFail();
+        .getOne();
     }
-
-    if (!topic) throw new NotFoundException('Topic not found.');
 
     return topic;
   }
