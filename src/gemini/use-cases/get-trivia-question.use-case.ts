@@ -15,7 +15,7 @@ export const getTriviaQuestionUseCase = async (
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: `Dame una pregunta de conocimiento general sobre el tema: ${description}`,
+    contents: `Dame una pregunta de conocimiento general sobre: ${description}`,
     config: {
       responseMimeType: 'application/json',
 
