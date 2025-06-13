@@ -1,18 +1,20 @@
-import { GoogleGenAI } from '@google/genai';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateTopicDto } from '../topic/dto/create-topic.dto';
+import OpenAI from 'openai';
 import { TopicService } from '../topic/topic.service';
+import { QuestionService } from '../question/question.service';
+import { CreateTopicDto } from '../topic/dto/create-topic.dto';
 import { Topic } from '../entities/topic.entity';
 import {
-  getTriviaQuestionGeminiUseCase,
+  getTriviaQuestionOpenAiUseCase,
   QuestionInterface,
-} from './use-cases/get-trivia-question-gemini.use-case';
+} from './use-cases/get-trivia-question-openai.use-case';
 import { CreateQuestionDto } from '../question/dto/create-question.dto';
-import { QuestionService } from '../question/question.service';
 
 @Injectable()
-export class GeminiService {
-  private ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+export class GptService {
+  private openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 
   constructor(
     private readonly topicService: TopicService,
@@ -39,7 +41,7 @@ export class GeminiService {
       while (isSimilar && attempts < maxRetries) {
         attempts++;
 
-        gptResponse = await getTriviaQuestionGeminiUseCase(this.ai, dto);
+        gptResponse = await getTriviaQuestionOpenAiUseCase(this.openai, dto);
 
         isSimilar = await this.questionService.findQuestion(
           gptResponse.question,

@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { TopicModule } from './topic/topic.module';
 import { QuestionModule } from './question/question.module';
 import { GeminiModule } from './gemini/gemini.module';
+import { GptModule } from './gpt/gpt.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GeminiModule } from './gemini/gemini.module';
     TopicModule,
     QuestionModule,
     GeminiModule,
+    GptModule,
   ],
   controllers: [],
   providers: [],

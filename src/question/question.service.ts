@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question } from '../entities/question.entity';
 import { ValidateAnswerDto } from './dto/validate-answer.dto';
+import { normalize } from '../utils/normalize.utils';
 
 @Injectable()
 export class QuestionService {
@@ -25,6 +26,20 @@ export class QuestionService {
       question: question.question,
       answers: question.answers,
     };
+  }
+
+  async findQuestion(question: string, topicId: string) {
+    const existing = await this.questionRepo.findBy({ topic: { id: topicId } });
+    const normalizedIncoming = normalize(question);
+
+    return existing.some((q) => {
+      const existingNormalized = normalize(q.question);
+
+      return (
+        existingNormalized.includes(normalizedIncoming) ||
+        normalizedIncoming.includes(existingNormalized)
+      );
+    });
   }
 
   async validateAnswer(dto: ValidateAnswerDto) {
