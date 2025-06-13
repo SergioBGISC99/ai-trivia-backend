@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Question } from '../entities/question.entity';
+import { Topic } from '../entities/topic.entity';
+import { User } from '../entities/user.entity';
 
 @Module({
   imports: [
@@ -19,6 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.DB_DATABASE,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
+      entities: [User, Topic, Question],
       synchronize: process.env.NODE_ENV === 'production' ? false : true,
       autoLoadEntities: true,
     }),
