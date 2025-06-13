@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { ApiResponse } from '@nestjs/swagger';
@@ -19,7 +19,8 @@ export class QuestionController {
     return this.questionService.createQuestion(dto);
   }
 
-  @Get('check-answer')
+  @Post('check-answer')
+  @HttpCode(HttpStatus.OK)
   findAnswer(@Body() dto: ValidateAnswerDto) {
     return this.questionService.validateAnswer(dto);
   }
