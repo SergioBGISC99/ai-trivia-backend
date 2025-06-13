@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { Question } from '../entities/question.entity';
 import { ValidateAnswerDto } from './dto/validate-answer.dto';
 import { normalize } from '../utils/normalize.utils';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class QuestionService {
@@ -12,6 +13,8 @@ export class QuestionService {
     @InjectRepository(Question)
     private readonly questionRepo: Repository<Question>,
   ) {}
+
+  private readonly logger = new Logger('QuestionService');
 
   async createQuestion(dto: CreateQuestionDto) {
     const question = this.questionRepo.create({
@@ -52,5 +55,21 @@ export class QuestionService {
     }
 
     return { isCorrect: question.correctAnswerIndex === answerIndex };
+  }
+
+  @Cron('0 0 * * *')
+  async handleMonthlyCleanup() {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const deleted = await this.questionRepo.delete({
+      createdAt: LessThan(oneWeekAgo),
+    });
+
+    if (deleted.affected && deleted.affected > 0) {
+      this.logger.warn(
+        `🧹 ${deleted.affected} preguntas eliminadas (más de 7 días de antigüedad)`,
+      );
+    }
   }
 }
