@@ -23,7 +23,7 @@ src/
 ## 📦 Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/ai-trivias-backend.git
+git clone https://github.com/SergioBGISC99/ai-trivia-backend.git
 cd ai-trivias-backend
 npm install
 ```
