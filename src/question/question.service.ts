@@ -57,6 +57,8 @@ export class QuestionService {
     return {
       question: question.question,
       answers: question.answers,
+      yourAnswer: answerIndex,
+      correctAnswer: question.correctAnswerIndex,
       isCorrect: question.correctAnswerIndex === answerIndex,
     };
   }
