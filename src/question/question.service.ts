@@ -54,7 +54,11 @@ export class QuestionService {
       throw new NotFoundException('Question not found');
     }
 
-    return { isCorrect: question.correctAnswerIndex === answerIndex };
+    return {
+      question: question.question,
+      answers: question.answers,
+      isCorrect: question.correctAnswerIndex === answerIndex,
+    };
   }
 
   @Cron('0 0 * * *')
